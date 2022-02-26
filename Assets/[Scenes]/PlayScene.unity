@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 519665914}
   m_Layer: 0
   m_Name: Ground
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -907,6 +907,42 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &701126815 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6276174337011996830, guid: 3d1469c38c23d024fa015487812d62e5, type: 3}
+  m_PrefabInstance: {fileID: 6618068922773225062}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &701126816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 701126815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90893c7cf6d39e645adaed17004b3b50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkSpeed: 5
+  runSpeed: 10
+  jumpForce: 5
+  aimSensitivity: 0.5
+  followTarget: {fileID: 0}
+--- !u!114 &701126817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 701126815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0115f9b0234c2364fa789ef12f2949e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isJumping: 0
+  isRunning: 0
 --- !u!4 &701126820 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6652559790783693348, guid: 3d1469c38c23d024fa015487812d62e5, type: 3}
@@ -1448,6 +1484,10 @@ PrefabInstance:
     - target: {fileID: 6276174337011996830, guid: 3d1469c38c23d024fa015487812d62e5, type: 3}
       propertyPath: m_Name
       value: Ty
+      objectReference: {fileID: 0}
+    - target: {fileID: 6276174337011996830, guid: 3d1469c38c23d024fa015487812d62e5, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 6652559790783693348, guid: 3d1469c38c23d024fa015487812d62e5, type: 3}
       propertyPath: m_RootOrder
