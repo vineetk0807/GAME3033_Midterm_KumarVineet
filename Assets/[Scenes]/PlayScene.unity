@@ -926,7 +926,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 5
   runSpeed: 10
-  jumpForce: 5
+  jumpForce: 6
   aimSensitivity: 0.5
   followTarget: {fileID: 0}
 --- !u!114 &701126817
@@ -943,6 +943,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isJumping: 0
   isRunning: 0
+  isUsing: 0
 --- !u!4 &701126820 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6652559790783693348, guid: 3d1469c38c23d024fa015487812d62e5, type: 3}

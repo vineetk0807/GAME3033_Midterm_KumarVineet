@@ -27,8 +27,7 @@ public class MovementComponent : MonoBehaviour
 
     // Animations
     [Header("Animations")]
-    public readonly int movementXHash = Animator.StringToHash("MovementX");
-    public readonly int movementYHash = Animator.StringToHash("MovementY");
+    public readonly int movementSpeed = Animator.StringToHash("MovementSpeed");
     public readonly int isJumpingHash = Animator.StringToHash("IsJumping");
     public readonly int isRunningHash = Animator.StringToHash("IsRunning");
 
@@ -67,6 +66,10 @@ public class MovementComponent : MonoBehaviour
 
         // Set current speed based on running or not
         float currentSpeed = _playerController.isRunning ? runSpeed : walkSpeed;
+        if (currentSpeed == runSpeed && _playerController.isJumping)
+        {
+            currentSpeed = walkSpeed;
+        }
 
         // Position update vector with current Speed
         Vector3 movementDirection = moveDirection * (currentSpeed * Time.deltaTime);
@@ -84,6 +87,9 @@ public class MovementComponent : MonoBehaviour
     {
         // Movement vector
         inputVector = value.Get<Vector2>();
+
+        // Set animator
+        _playerAnimator.SetFloat(movementSpeed,inputVector.magnitude);
     }
 
 
@@ -104,6 +110,9 @@ public class MovementComponent : MonoBehaviour
 
         // Add force
         m_rb.AddForce((transform.up + moveDirection) * jumpForce, ForceMode.Impulse);
+
+        // Set animator
+        _playerAnimator.SetBool(isJumpingHash,_playerController.isJumping);
     }
 
     /// <summary>
@@ -112,14 +121,11 @@ public class MovementComponent : MonoBehaviour
     /// <param name="value"></param>
     public void OnRun(InputValue value)
     {
-        // if in mid air already, cannot increase speed
-        if (_playerController.isJumping)
-        {
-            return;
-        }
-
         // set player controller is running check to true
         _playerController.isRunning = value.isPressed;
+
+        // Set animator
+        _playerAnimator.SetBool(isRunningHash, _playerController.isRunning);
     }
 
 
@@ -155,6 +161,9 @@ public class MovementComponent : MonoBehaviour
 
             // Colliding with ground means not jumping
             _playerController.isJumping = false;
+
+            // update animator too
+            _playerAnimator.SetBool(isJumpingHash,_playerController.isJumping);
         }
     }
 }
