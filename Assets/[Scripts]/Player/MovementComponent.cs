@@ -37,6 +37,8 @@ public class MovementComponent : MonoBehaviour
     // Executions
     private Vector2 inputVector = Vector2.zero;
     private Vector3 moveDirection = Vector3.zero;
+    private Vector3 targetRotation = Vector3.zero;
+    public float rotationSpeed = 200f;
 
     private void Awake()
     {
@@ -64,6 +66,12 @@ public class MovementComponent : MonoBehaviour
         // Set direction using the inputVector and respective forward and right vectors
         moveDirection = transform.forward * inputVector.y + transform.right * inputVector.x;
 
+        // If moving, take into consideration rotation too
+        if (moveDirection != Vector3.zero)
+        {
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(moveDirection), rotationSpeed * Time.deltaTime);
+        }
+
         // Set current speed based on running or not
         float currentSpeed = _playerController.isRunning ? runSpeed : walkSpeed;
         if (currentSpeed == runSpeed && _playerController.isJumping)
@@ -73,7 +81,9 @@ public class MovementComponent : MonoBehaviour
 
         // Position update vector with current Speed
         Vector3 movementDirection = moveDirection * (currentSpeed * Time.deltaTime);
-        transform.position += movementDirection;
+        
+        var targetPosition = transform.position + movementDirection;
+        transform.position = targetPosition;
     }
 
     //-------------------------------------- Movement Functions --------------------------------------//
