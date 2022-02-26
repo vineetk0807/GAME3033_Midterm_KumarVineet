@@ -7,13 +7,9 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
 
-    [Header("Main Camera")]
-    [SerializeField]
-    private Transform MainCamera;
+    
 
-    [Header("Virtual Cameras")]
-    [SerializeField]
-    private CinemachineVirtualCamera CinemachineCamera;
+    
 
     private void Awake()
     {
@@ -30,5 +26,13 @@ public class CameraController : MonoBehaviour
     void Update()
     {
         
+    }
+
+    /// <summary>
+    /// Camera Look functionality
+    /// </summary>
+    public void CameraLook()
+    {
+
     }
 }

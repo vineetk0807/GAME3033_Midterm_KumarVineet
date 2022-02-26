@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,11 +24,20 @@ public class MovementComponent : MonoBehaviour
     // Look
     private Vector2 lookInput = Vector2.zero;
     public float aimSensitivity = 0.5f;
-    public GameObject followTarget;
+
+    // Camera
+    [Header("Camera")]
+    [SerializeField]
+    private Transform MainCamera;
+    [SerializeField]
+    private CinemachineVirtualCamera CinemachineCamera;
+    [SerializeField]
+    private GameObject FollowTarget;
 
     // Animations
     [Header("Animations")]
-    public readonly int movementSpeed = Animator.StringToHash("MovementSpeed");
+    public readonly int movementXHash = Animator.StringToHash("MovementX");
+    public readonly int movementYHash = Animator.StringToHash("MovementY");
     public readonly int isJumpingHash = Animator.StringToHash("IsJumping");
     public readonly int isRunningHash = Animator.StringToHash("IsRunning");
 
@@ -57,6 +67,36 @@ public class MovementComponent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // horizontal
+        FollowTarget.transform.rotation *= Quaternion.AngleAxis(lookInput.x * aimSensitivity, Vector3.up);
+
+        // vertical
+        FollowTarget.transform.rotation *= Quaternion.AngleAxis(lookInput.y * aimSensitivity, Vector3.left);
+
+        // clamp the rotation <- look for a better way using cinemachine
+        var angles = FollowTarget.transform.localEulerAngles;
+        angles.z = 0;
+
+        var angle = FollowTarget.transform.localEulerAngles.x;
+
+        // clamp values to be tweaked later as per requirement
+        if (angle > 180 && angle < 300)
+        {
+            angles.x = 300;
+        }
+        else if (angle < 180 && angle > 70)
+        {
+            angles.x = 70;
+        }
+
+        FollowTarget.transform.localEulerAngles = angles;
+
+        // rotate the player based on look
+        transform.rotation = Quaternion.Euler(0, FollowTarget.transform.rotation.eulerAngles.y, 0);
+
+        //followTarget.transform.localEulerAngles = Vector3.zero; <-- All angles 0 x should be angles.x
+        FollowTarget.transform.localEulerAngles = new Vector3(angles.x, 0f, 0f);
+
         // If the input vector catches some input, the there is movement to the character, else set direction to 0
         if (!(inputVector.magnitude > 0))
         {
@@ -65,13 +105,7 @@ public class MovementComponent : MonoBehaviour
 
         // Set direction using the inputVector and respective forward and right vectors
         moveDirection = transform.forward * inputVector.y + transform.right * inputVector.x;
-
-        // If moving, take into consideration rotation too
-        if (moveDirection != Vector3.zero)
-        {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(moveDirection), rotationSpeed * Time.deltaTime);
-        }
-
+        
         // Set current speed based on running or not
         float currentSpeed = _playerController.isRunning ? runSpeed : walkSpeed;
         if (currentSpeed == runSpeed && _playerController.isJumping)
@@ -81,9 +115,8 @@ public class MovementComponent : MonoBehaviour
 
         // Position update vector with current Speed
         Vector3 movementDirection = moveDirection * (currentSpeed * Time.deltaTime);
-        
-        var targetPosition = transform.position + movementDirection;
-        transform.position = targetPosition;
+        transform.position += movementDirection;
+
     }
 
     //-------------------------------------- Movement Functions --------------------------------------//
@@ -99,7 +132,8 @@ public class MovementComponent : MonoBehaviour
         inputVector = value.Get<Vector2>();
 
         // Set animator
-        _playerAnimator.SetFloat(movementSpeed,inputVector.magnitude);
+        _playerAnimator.SetFloat(movementXHash, inputVector.x);
+        _playerAnimator.SetFloat(movementYHash, inputVector.y);
     }
 
 
@@ -153,6 +187,11 @@ public class MovementComponent : MonoBehaviour
         _playerController.isUsing = true;
     }
 
+
+    public void OnLook(InputValue value)
+    {
+        lookInput = value.Get<Vector2>();
+    }
 
     //-------------------------------------- Collision Functions --------------------------------------//
 

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 33c8fce51348c9e4a8bc421267e4afc8
+guid: 5d78801534055d2478398600b4f71fd3
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable:
@@ -21,9 +21,7 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
-    animationImportWarnings: "\nClip 'mixamo.com' has import animation warnings that
-      might lower retargeting quality:\n\t'Boy:Spine1' is inbetween humanoid transforms
-      and has rotation animation that will be discarded.\n"
+    animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
