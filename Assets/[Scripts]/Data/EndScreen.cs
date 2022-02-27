@@ -19,6 +19,8 @@ public class EndScreen : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        AudioManager.GetInstance().PlaySceneTrack(AudioManager.MusicTrack.BGM_EndScene,0.1f,0.2f);
+
         Cursor.visible = true;
 
         if (Data.isVictory)
