@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Initialize();
+        AudioManager.GetInstance().PlaySceneTrack(AudioManager.MusicTrack.BGM_StartScene, 0f, 0.5f);
     }
 
     // Update is called once per frame
