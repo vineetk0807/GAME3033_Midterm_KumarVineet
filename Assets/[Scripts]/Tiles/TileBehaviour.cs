@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TileBehaviour : MonoBehaviour
 {
+    public int number = 0;
     public bool isColliding = false;
 
     private void OnCollisionEnter(Collision other)
@@ -28,7 +29,7 @@ public class TileBehaviour : MonoBehaviour
     {
         Debug.Log("Disappearing in 2");
         yield return new WaitForSeconds(2f);
-        Debug.Log("Disappeared!");
+        Destroy(gameObject);
     }
 
 

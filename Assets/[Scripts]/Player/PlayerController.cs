@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public Vector3 spawnPoint;
 
     // Movement
     public bool isJumping;

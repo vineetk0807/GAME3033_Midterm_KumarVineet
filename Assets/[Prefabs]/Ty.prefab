@@ -2199,10 +2199,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2.22
+  m_Radius: 0.24663997
+  m_Height: 2.041822
   m_Direction: 1
-  m_Center: {x: 0, y: 1.11, z: 0}
+  m_Center: {x: 0.03329575, y: 1.020911, z: -0.056946397}
 --- !u!114 &827312155925211951
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2218,11 +2218,11 @@ MonoBehaviour:
   walkSpeed: 3
   runSpeed: 7
   jumpForce: 6
+  fallVelocity: -6
   aimSensitivity: 0.5
   MainCamera: {fileID: 0}
   CinemachineCamera: {fileID: 0}
   FollowTarget: {fileID: 1529004693}
-  rotationSpeed: 200
 --- !u!114 &6852667373131804996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2235,9 +2235,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0115f9b0234c2364fa789ef12f2949e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnPoint: {x: 0.85, y: 1.96, z: -0.61}
   isJumping: 0
   isRunning: 0
   isUsing: 0
+  isFalling: 0
+  isDying: 0
 --- !u!1 &6384939144895700908
 GameObject:
   m_ObjectHideFlags: 0

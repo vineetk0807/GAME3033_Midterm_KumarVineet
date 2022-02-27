@@ -218,6 +218,10 @@ public class MovementComponent : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Look Input
+    /// </summary>
+    /// <param name="value"></param>
     public void OnLook(InputValue value)
     {
         lookInput = value.Get<Vector2>();
