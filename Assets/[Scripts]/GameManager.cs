@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using TMPro;
 using UnityEngine;
 
@@ -15,6 +16,16 @@ public class GameManager : MonoBehaviour
     public int roundNumber = 0;
     public List<GameObject> Tiles;
 
+    [Header("Objective")] 
+    public GameObject ObjectivePrefab;
+    public Vector3 ObjectiveSpawnLocation;
+
+    [Header("Items")] 
+    public GameObject TimerCollectiblePrefab;
+
+    public GameObject TMP_PlusTimer;
+        
+
     [Header("Deathplane")] 
     public GameObject DeathPlane;
 
@@ -26,6 +37,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject pausePanel;
 
+    public int resetTimer = 3;
     public int timer = 20;
     private float currentTime = 0f;
 
@@ -98,6 +110,11 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        // Objective
+        GameObject objective = Instantiate(ObjectivePrefab,
+            new Vector3(ObjectiveSpawnLocation.x, roundNumber * Y_PositionOffset + 1,
+                ObjectiveSpawnLocation.z), Quaternion.identity);
+
         // Death plane update
         Vector3 DeathPlanePosition = DeathPlane.transform.position;
         DeathPlane.transform.position = new Vector3(DeathPlanePosition.x, (roundNumber + 1) * Y_PositionOffset, DeathPlanePosition.z);
@@ -120,7 +137,7 @@ public class GameManager : MonoBehaviour
             if (timer <= 0 && !executeOnce)
             {
                 executeOnce = true;
-                ProceedToNextRound();
+                //ProceedToNextRound();
             }
         }
     }
@@ -142,7 +159,7 @@ public class GameManager : MonoBehaviour
         roundNumber++;
 
         // reset timer
-        timer = 20;
+        timer = resetTimer;
         executeOnce = false;
 
         foreach (var tile in Tiles)
@@ -158,8 +175,41 @@ public class GameManager : MonoBehaviour
         GenerateTiles(tileIndex);
     }
 
+    //--------------------------------- Objective and Collectibles ---------------------------------//
+
+    /// <summary>
+    /// Spawns Timer Collectible
+    /// </summary>
+    public void SpawnTimerCollectible(int tileNumber)
+    {
+        // Spawn Timer
+        GameObject timer = Instantiate(TimerCollectiblePrefab,
+            new Vector3(Tiles[tileNumber].transform.position.x, Tiles[tileNumber].transform.position.y + (roundNumber * Y_PositionOffset) + 2f,
+                Tiles[tileNumber].transform.position.z), Quaternion.identity);
+    }
+
+    /// <summary>
+    /// Collectible will add time
+    /// </summary>
+    public void AddTime(int timeToAdd)
+    {
+        timer += timeToAdd;
+        StartCoroutine(UpdateTimerDisplay());
+    }
+
+    /// <summary>
+    /// Add +(x) timer UI
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator UpdateTimerDisplay()
+    {
+        TMP_PlusTimer.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        TMP_PlusTimer.SetActive(false);
+    }
+
     //-------------------------------------- Player --------------------------------------//
-    
+
     /// <summary>
     /// Player Dead function
     /// </summary>

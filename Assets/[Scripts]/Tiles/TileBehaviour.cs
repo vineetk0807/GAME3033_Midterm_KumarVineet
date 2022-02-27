@@ -6,6 +6,8 @@ public class TileBehaviour : MonoBehaviour
 {
     public int number = 0;
     public bool isColliding = false;
+    public float delayTimer = 2f;
+    public float rateOfColorChange = 0.1f;
 
     private MeshRenderer tileMeshRenderer;
 
@@ -13,7 +15,8 @@ public class TileBehaviour : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            StartCoroutine(Disappear());
+            StartCoroutine(Disappear(GameManager.GetInstance().roundNumber + 1));
+            StartCoroutine(SpawnCollectible());
             isColliding = true;
         }
     }
@@ -27,24 +30,41 @@ public class TileBehaviour : MonoBehaviour
         }
     }
 
-    IEnumerator Disappear()
+    /// <summary>
+    /// Make the tile disappear
+    /// </summary>
+    /// <param name="roundNumber"></param>
+    /// <returns></returns>
+    IEnumerator Disappear(int roundNumber)
     {
         float timer = 0.0f;
 
+        //delayTimer *= roundNumber;
+
         // color lerp within the given delay
-        while (timer < 1.5f)
+        while (timer < delayTimer * 0.25)
         {
             timer += Time.deltaTime;
 
-            tileMeshRenderer.materials[1].color = Color.Lerp(tileMeshRenderer.materials[1].color,Color.white, timer * Time.deltaTime);
+            tileMeshRenderer.materials[1].color = Color.Lerp(tileMeshRenderer.materials[1].color,Color.white, rateOfColorChange * Time.deltaTime);
 
             yield return new WaitForEndOfFrame();
         }
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(delayTimer);
         Destroy(gameObject);
     }
 
+
+    /// <summary>
+    /// Spawn collectible after 1 second
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator SpawnCollectible()
+    {
+        yield return new WaitForSeconds(1f);
+        GameManager.GetInstance().SpawnTimerCollectible(number);
+    }
 
     // Start is called before the first frame update
     void Start()
