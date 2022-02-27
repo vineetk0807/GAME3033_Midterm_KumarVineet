@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.Remoting.Messaging;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -35,6 +36,10 @@ public class GameManager : MonoBehaviour
     [Header("UI")] 
     public TextMeshProUGUI TMP_timer;
 
+    [Header("Score")] 
+    public TextMeshProUGUI TMP_Score;
+    
+    [Header("Others")]
     public GameObject pausePanel;
 
     public int resetTimer = 3;
@@ -44,6 +49,8 @@ public class GameManager : MonoBehaviour
     // Executions
     private bool executeOnce = false;
     private bool isPlayerDead = false;
+    public int NumberOfObjectivesCollected = 0;
+    public bool isObjectiveSpawned = false;
 
     private static GameManager _instance;
     public static GameManager GetInstance()
@@ -59,8 +66,10 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Data.Reset();
         Initialize();
         AudioManager.GetInstance().PlaySceneTrack(AudioManager.MusicTrack.BGM_StartScene, 0f, 0.5f);
+        TMP_Score.text = Data.Score.ToString();
     }
 
     // Update is called once per frame
@@ -110,11 +119,6 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // Objective
-        GameObject objective = Instantiate(ObjectivePrefab,
-            new Vector3(ObjectiveSpawnLocation.x, roundNumber * Y_PositionOffset + 1,
-                ObjectiveSpawnLocation.z), Quaternion.identity);
-
         // Death plane update
         Vector3 DeathPlanePosition = DeathPlane.transform.position;
         DeathPlane.transform.position = new Vector3(DeathPlanePosition.x, (roundNumber + 1) * Y_PositionOffset, DeathPlanePosition.z);
@@ -138,6 +142,7 @@ public class GameManager : MonoBehaviour
             {
                 executeOnce = true;
                 //ProceedToNextRound();
+                OutOfTime();
             }
         }
     }
@@ -175,7 +180,49 @@ public class GameManager : MonoBehaviour
         GenerateTiles(tileIndex);
     }
 
+    /// <summary>
+    /// Out of time function.. Game Over
+    /// </summary>
+    public void OutOfTime()
+    {
+        SceneManager.LoadScene((int)Scene.END);
+    }
+
     //--------------------------------- Objective and Collectibles ---------------------------------//
+
+
+    public void ObjectiveCollected(Objective objective)
+    {
+        NumberOfObjectivesCollected++;
+
+        switch (NumberOfObjectivesCollected)
+        {
+            case 1:
+                ProceedToNextRound();
+                Destroy(objective.gameObject);
+                isObjectiveSpawned = false;
+                break;
+
+            case 2:
+                ProceedToNextRound();
+                Destroy(objective.gameObject);
+                isObjectiveSpawned = false;
+                break;
+
+
+            case 3:
+                Data.isVictory = true;
+                SceneManager.LoadScene(2);
+                break;
+
+            default:
+                Data.isVictory = false;
+                SceneManager.LoadScene(2);
+                break;
+        }
+
+    }
+
 
     /// <summary>
     /// Spawns Timer Collectible
@@ -183,18 +230,52 @@ public class GameManager : MonoBehaviour
     public void SpawnTimerCollectible(int tileNumber)
     {
         // Spawn Timer
+
         GameObject timer = Instantiate(TimerCollectiblePrefab,
-            new Vector3(Tiles[tileNumber].transform.position.x, Tiles[tileNumber].transform.position.y + (roundNumber * Y_PositionOffset) + 2f,
+            new Vector3(Tiles[tileNumber].transform.position.x, Tiles[tileNumber].transform.position.y  + 2f,
                 Tiles[tileNumber].transform.position.z), Quaternion.identity);
     }
 
     /// <summary>
     /// Collectible will add time
     /// </summary>
-    public void AddTime(int timeToAdd)
+    public void ItemCollected(int timeToAdd)
     {
+        // Time update
         timer += timeToAdd;
         StartCoroutine(UpdateTimerDisplay());
+
+        // Score update
+        Data.Score += 10;
+        TMP_Score.text = Data.Score.ToString();
+
+
+        if (Data.Score >= 100 * (roundNumber + 1))
+        {
+            if (!isObjectiveSpawned)
+            {
+
+                if ((roundNumber + 1) % 2 == 0)
+                {
+                    // Objective
+                    GameObject objective = Instantiate(ObjectivePrefab,
+                        new Vector3(0, roundNumber * Y_PositionOffset + 1,
+                            0), Quaternion.identity);
+
+                }
+                else
+                {
+                    // Objective
+                    GameObject objective = Instantiate(ObjectivePrefab,
+                        new Vector3(ObjectiveSpawnLocation.x, roundNumber * Y_PositionOffset + 1,
+                            ObjectiveSpawnLocation.z), Quaternion.identity);
+                }
+
+
+                isObjectiveSpawned = true;
+
+            }
+        }
     }
 
     /// <summary>
@@ -218,5 +299,13 @@ public class GameManager : MonoBehaviour
         player.gameObject.GetComponent<MovementComponent>().enabled = false;
         
         // show end screen panel
+        Data.isVictory = false;
+        StartCoroutine(EndScreenCoroutineOnPlayerDeath());
+    }
+
+    IEnumerator EndScreenCoroutineOnPlayerDeath()
+    {
+        yield return new WaitForSeconds(1.5f);
+        SceneManager.LoadScene(2);
     }
 }

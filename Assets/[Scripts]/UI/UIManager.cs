@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 public enum Scene
 {
     MENU,
-    PLAY
+    PLAY,
+    END,
 }
 
 public class UIManager : MonoBehaviour

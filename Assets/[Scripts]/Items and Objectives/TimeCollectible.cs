@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class TimeCollectible : MonoBehaviour
 {
-
+    // parameters for collectibles
     public int timeToAdd = 1;
     public float lifeSpan = 5f;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        StartCoroutine(SelfDestroy());
     }
 
     // Update is called once per frame
@@ -24,7 +24,7 @@ public class TimeCollectible : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        GameManager.GetInstance().AddTime(timeToAdd);
+        GameManager.GetInstance().ItemCollected(timeToAdd);
         GetComponent<BoxCollider>().enabled = false;
         Destroy(gameObject);
     }

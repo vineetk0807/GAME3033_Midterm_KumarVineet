@@ -25,7 +25,7 @@ public class Objective : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Player has reached objective");
+            GameManager.GetInstance().ObjectiveCollected(this);
         }
     }
 }
