@@ -7,6 +7,8 @@ public class TileBehaviour : MonoBehaviour
     public int number = 0;
     public bool isColliding = false;
 
+    private MeshRenderer tileMeshRenderer;
+
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Player"))
@@ -27,7 +29,18 @@ public class TileBehaviour : MonoBehaviour
 
     IEnumerator Disappear()
     {
-        Debug.Log("Disappearing in 2");
+        float timer = 0.0f;
+
+        // color lerp within the given delay
+        while (timer < 1.5f)
+        {
+            timer += Time.deltaTime;
+
+            tileMeshRenderer.materials[1].color = Color.Lerp(tileMeshRenderer.materials[1].color,Color.white, timer * Time.deltaTime);
+
+            yield return new WaitForEndOfFrame();
+        }
+
         yield return new WaitForSeconds(2f);
         Destroy(gameObject);
     }
@@ -36,7 +49,7 @@ public class TileBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        tileMeshRenderer = GetComponent<MeshRenderer>();
     }
 
     // Update is called once per frame
