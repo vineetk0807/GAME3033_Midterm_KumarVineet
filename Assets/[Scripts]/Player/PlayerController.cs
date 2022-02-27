@@ -13,6 +13,9 @@ public class PlayerController : MonoBehaviour
     public bool isFalling;
     public bool isDying;
 
+    // Game Control
+    public bool isPaused;
+
 
     // Start is called before the first frame update
     void Start()

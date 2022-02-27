@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
     [Header("UI")] 
     public TextMeshProUGUI TMP_timer;
 
+    public GameObject pausePanel;
+
     public int timer = 20;
     private float currentTime = 0f;
 

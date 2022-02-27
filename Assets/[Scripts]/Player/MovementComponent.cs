@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -138,7 +139,7 @@ public class MovementComponent : MonoBehaviour
     /// <param name="value"></param>
     public void OnMovement(InputValue value)
     {
-        if (_playerController.isFalling || _playerController.isDying)
+        if (_playerController.isFalling || _playerController.isDying || _playerController.isPaused)
         {
             return;
         }
@@ -159,7 +160,7 @@ public class MovementComponent : MonoBehaviour
     /// <param name="value"></param>
     public void OnJump(InputValue value)
     {
-        if (_playerController.isFalling || _playerController.isDying)
+        if (_playerController.isFalling || _playerController.isDying || _playerController.isPaused)
         {
             return;
         }
@@ -185,7 +186,7 @@ public class MovementComponent : MonoBehaviour
     /// <param name="value"></param>
     public void OnRun(InputValue value)
     {
-        if (_playerController.isFalling || _playerController.isDying)
+        if (_playerController.isFalling || _playerController.isDying || _playerController.isPaused)
         {
             return;
         }
@@ -224,7 +225,27 @@ public class MovementComponent : MonoBehaviour
     /// <param name="value"></param>
     public void OnLook(InputValue value)
     {
+        // if paused, do not execute
+        if (_playerController.isPaused)
+        {
+            return;
+        }
+
         lookInput = value.Get<Vector2>();
+    }
+
+
+    /// <summary>
+    /// Paused function
+    /// </summary>
+    /// <param name="value"></param>
+    public void OnPause(InputValue value)
+    {
+        _playerController.isPaused = value.isPressed;
+        inputVector = Vector2.zero;
+        lookInput = Vector2.zero;
+        GameManager.GetInstance().pausePanel.SetActive(true);
+        Time.timeScale = 0f;
     }
 
     //-------------------------------------- Collision Functions --------------------------------------//
