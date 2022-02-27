@@ -164,7 +164,7 @@ public class GameManager : MonoBehaviour
         roundNumber++;
 
         // reset timer
-        timer = resetTimer;
+        timer += resetTimer;
         executeOnce = false;
 
         foreach (var tile in Tiles)
@@ -185,6 +185,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OutOfTime()
     {
+        Data.isTimeOut = true;
         SceneManager.LoadScene((int)Scene.END);
     }
 

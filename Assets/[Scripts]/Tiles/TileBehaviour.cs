@@ -11,13 +11,20 @@ public class TileBehaviour : MonoBehaviour
 
     private MeshRenderer tileMeshRenderer;
 
+    private bool isTimerCollSpawned = false;
+
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
             StartCoroutine(Disappear(GameManager.GetInstance().roundNumber + 1));
-            StartCoroutine(SpawnCollectible());
             isColliding = true;
+            if (!isTimerCollSpawned)
+            {
+                isTimerCollSpawned = true;
+                StartCoroutine(SpawnCollectible());
+            }
+                
         }
     }
 

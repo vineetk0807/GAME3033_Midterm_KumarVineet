@@ -19,15 +19,16 @@ public class EndScreen : MonoBehaviour
         }
         else
         {
-            GameResult.text = "You Lost :(";
+            if (Data.isTimeOut)
+            {
+                GameResult.text = "Time Up! :(";
+            }
+            else
+            {
+                GameResult.text = "You Lost :(";
+            }
         }
 
         TotalScore.text = Data.Score.ToString();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

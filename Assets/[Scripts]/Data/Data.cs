@@ -11,10 +11,12 @@ public class Data : MonoBehaviour
     // All data
     public static int Score = 0;
     public static bool isVictory = false;
+    public static bool isTimeOut = false;
 
     public static void Reset()
     {
         Score = 0;
         isVictory = false;
+        isTimeOut = false;
     }
 }

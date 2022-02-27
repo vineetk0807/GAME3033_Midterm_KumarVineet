@@ -114,6 +114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeToAdd: 2
+  lifeSpan: 5
 --- !u!65 &-3646267037658729424
 BoxCollider:
   m_ObjectHideFlags: 0
