@@ -10,10 +10,16 @@ public class MenuScript : MonoBehaviour
     public Image greenTile;
     public Image blueTile;
 
+    public Animator TyAnimator;
+
+    public readonly int isInMainMenuHash = Animator.StringToHash("IsInMainMenu");
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        Cursor.visible = true;
+        TyAnimator.SetBool(isInMainMenuHash, true);
+
     }
 
     // Update is called once per frame

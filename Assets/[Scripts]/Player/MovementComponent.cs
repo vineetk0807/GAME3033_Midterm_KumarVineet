@@ -246,6 +246,7 @@ public class MovementComponent : MonoBehaviour
         lookInput = Vector2.zero;
         GameManager.GetInstance().pausePanel.SetActive(true);
         Time.timeScale = 0f;
+        Cursor.visible = true;
     }
 
     //-------------------------------------- Collision Functions --------------------------------------//

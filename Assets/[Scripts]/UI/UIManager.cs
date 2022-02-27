@@ -39,7 +39,7 @@ public class UIManager : MonoBehaviour
     public void Button_Play()
     {
         AudioManager.GetInstance().PlaySFX(audioSource,buttonPress,0.5f,false);
-        AudioManager.GetInstance().PlaySceneTrack(AudioManager.MusicTrack.BGM_PlayScene, 0.1f, 0.5f);
+        AudioManager.GetInstance().PlaySceneTrack(AudioManager.MusicTrack.BGM_PlayScene, 0.1f, 0.2f);
         SceneManager.LoadScene((int)Scene.PLAY);
     }
 
@@ -92,7 +92,7 @@ public class UIManager : MonoBehaviour
     public void Button_Menu()
     {
         AudioManager.GetInstance().PlaySFX(audioSource, buttonPress, 0.5f, false);
-        AudioManager.GetInstance().PlaySceneTrack(AudioManager.MusicTrack.BGM_StartScene, 0.1f, 0.5f);
+        AudioManager.GetInstance().PlaySceneTrack(AudioManager.MusicTrack.BGM_StartScene, 0.1f, 0.2f);
         SceneManager.LoadScene(0);
         if (Time.timeScale != 1f)
         {
@@ -109,5 +109,6 @@ public class UIManager : MonoBehaviour
         AudioManager.GetInstance().PlaySFX(audioSource, buttonPress, 0.5f, false);
         GameManager.GetInstance().pausePanel.SetActive(false);
         GameManager.GetInstance().player.isPaused = false;
+        Cursor.visible = false;
     }
 }

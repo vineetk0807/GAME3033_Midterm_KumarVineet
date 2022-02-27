@@ -42,6 +42,10 @@ public class GameManager : MonoBehaviour
     [Header("Others")]
     public GameObject pausePanel;
 
+    [Header("Audio")] 
+    public AudioClip ItemPickUp;
+    public AudioClip ObjectiveClip;
+
     public int resetTimer = 3;
     public int timer = 20;
     private float currentTime = 0f;
@@ -68,8 +72,11 @@ public class GameManager : MonoBehaviour
     {
         Data.Reset();
         Initialize();
-        AudioManager.GetInstance().PlaySceneTrack(AudioManager.MusicTrack.BGM_StartScene, 0f, 0.5f);
+        AudioManager.GetInstance().PlaySceneTrack(AudioManager.MusicTrack.BGM_StartScene, 0f, 0.2f);
         TMP_Score.text = Data.Score.ToString();
+
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = false;
     }
 
     // Update is called once per frame
@@ -202,16 +209,19 @@ public class GameManager : MonoBehaviour
                 ProceedToNextRound();
                 Destroy(objective.gameObject);
                 isObjectiveSpawned = false;
+                AudioManager.GetInstance().PlaySFX(player.gameObject.GetComponent<AudioSource>(), ObjectiveClip, 0.4f, false);
                 break;
 
             case 2:
                 ProceedToNextRound();
                 Destroy(objective.gameObject);
                 isObjectiveSpawned = false;
+                AudioManager.GetInstance().PlaySFX(player.gameObject.GetComponent<AudioSource>(), ObjectiveClip, 0.4f, false);
                 break;
 
 
             case 3:
+                AudioManager.GetInstance().PlaySFX(player.gameObject.GetComponent<AudioSource>(), ObjectiveClip, 0.4f, false);
                 Data.isVictory = true;
                 SceneManager.LoadScene(2);
                 break;
@@ -242,6 +252,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void ItemCollected(int timeToAdd)
     {
+        AudioManager.GetInstance().PlaySFX(player.gameObject.GetComponent<AudioSource>(),ItemPickUp,0.4f,false);
+
         // Time update
         timer += timeToAdd;
         StartCoroutine(UpdateTimerDisplay());
@@ -297,11 +309,13 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void PlayerDeadFunction()
     {
+        Cursor.visible = true;
         player.gameObject.GetComponent<MovementComponent>().enabled = false;
         
         // show end screen panel
         Data.isVictory = false;
         StartCoroutine(EndScreenCoroutineOnPlayerDeath());
+        
     }
 
     IEnumerator EndScreenCoroutineOnPlayerDeath()
