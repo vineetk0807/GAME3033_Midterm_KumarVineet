@@ -20,6 +20,8 @@ public class MovementComponent : MonoBehaviour
     private float runSpeed = 10f;
     [SerializeField]
     private float jumpForce = 5f;
+    [SerializeField] 
+    private float fallVelocity = -6f;
 
     // Look
     private Vector2 lookInput = Vector2.zero;
@@ -40,15 +42,14 @@ public class MovementComponent : MonoBehaviour
     public readonly int movementYHash = Animator.StringToHash("MovementY");
     public readonly int isJumpingHash = Animator.StringToHash("IsJumping");
     public readonly int isRunningHash = Animator.StringToHash("IsRunning");
-
-    // References
+    public readonly int isFallingHash = Animator.StringToHash("IsFalling");
+    public readonly int isDyingHash = Animator.StringToHash("IsDying");
 
 
     // Executions
     private Vector2 inputVector = Vector2.zero;
     private Vector3 moveDirection = Vector3.zero;
-    private Vector3 targetRotation = Vector3.zero;
-    public float rotationSpeed = 200f;
+    
 
     private void Awake()
     {
@@ -116,7 +117,16 @@ public class MovementComponent : MonoBehaviour
         // Position update vector with current Speed
         Vector3 movementDirection = moveDirection * (currentSpeed * Time.deltaTime);
         transform.position += movementDirection;
+    }
 
+
+    private void FixedUpdate()
+    {
+        if (m_rb.velocity.y < fallVelocity)
+        {
+            _playerController.isFalling = true;
+            _playerAnimator.SetBool(isFallingHash, _playerController.isFalling);
+        }
     }
 
     //-------------------------------------- Movement Functions --------------------------------------//
@@ -128,6 +138,11 @@ public class MovementComponent : MonoBehaviour
     /// <param name="value"></param>
     public void OnMovement(InputValue value)
     {
+        if (_playerController.isFalling || _playerController.isDying)
+        {
+            return;
+        }
+
         // Movement vector
         inputVector = value.Get<Vector2>();
 
@@ -144,6 +159,11 @@ public class MovementComponent : MonoBehaviour
     /// <param name="value"></param>
     public void OnJump(InputValue value)
     {
+        if (_playerController.isFalling || _playerController.isDying)
+        {
+            return;
+        }
+
         if (_playerController.isJumping)
         {
             return;
@@ -165,6 +185,11 @@ public class MovementComponent : MonoBehaviour
     /// <param name="value"></param>
     public void OnRun(InputValue value)
     {
+        if (_playerController.isFalling || _playerController.isDying)
+        {
+            return;
+        }
+
         // set player controller is running check to true
         _playerController.isRunning = value.isPressed;
 
@@ -179,6 +204,11 @@ public class MovementComponent : MonoBehaviour
     /// <param name="value"></param>
     public void OnUse(InputValue value)
     {
+        if (_playerController.isFalling || _playerController.isDying)
+        {
+            return;
+        }
+
         if (_playerController.isUsing)
         {
             return;
@@ -203,6 +233,9 @@ public class MovementComponent : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Ground"))
         {
+            _playerController.isFalling = false;
+            _playerAnimator.SetBool(isFallingHash, _playerController.isFalling);
+
             if (!_playerController.isJumping)
             {
                 return;
@@ -213,6 +246,13 @@ public class MovementComponent : MonoBehaviour
 
             // update animator too
             _playerAnimator.SetBool(isJumpingHash,_playerController.isJumping);
+        }
+
+        if (other.gameObject.CompareTag("Deathplane"))
+        {
+            Debug.Log("Dead");
+            _playerController.isDying = true;
+           _playerAnimator.SetTrigger(isDyingHash);
         }
     }
 }

@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
     public bool isJumping;
     public bool isRunning;
     public bool isUsing;
+    public bool isFalling;
+    public bool isDying;
 
 
     // Start is called before the first frame update
